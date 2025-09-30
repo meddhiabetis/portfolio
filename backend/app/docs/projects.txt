@@ -1,0 +1,177 @@
+## CHUNKING GUIDELINES
+# Hybrid chunking ready:
+# - Top-level header splits start with "## " (e.g., "## Resume Screening System").
+# - Within long sections (project descriptions, notebooks), apply token/character-based chunking with overlap.
+# - Recommended chunk settings for long sections: chunk_size 400–800 chars, overlap 50–200 chars.
+# - When ingesting, record metadata: {"source": "projects_collection.txt", "section": "<SECTION_NAME>", "filename": "<orig_repo_or_file>", "start_line": n, "end_line": m}
+# - For lists (features, tech, datasets), index each bullet as a separate short vector where possible to improve recall for list queries.
+
+## Projects Overview
+This document collects long, retrieval-friendly descriptions of Mohamed Dhia Betis’s software and research projects. Each project section opens with a concise overview, followed by technology stack, key features or components, datasets, and implementation notes. Use header-aware splitting on the "## " lines and token-based chunking for long paragraphs (projects with long notebooks or training logs). Preserve named entities (tool and repo names) exactly to support hybrid sparse+dense retrieval.
+
+## Resume Screening System (resume-screening-django)
+Overview
+The Resume Screening System is a Django-based resume processing and search platform that combines semantic vector search and graph-based relationship analysis to provide advanced resume matching and structured candidate insights. It supports automatic Gmail resume import using Google OAuth and is designed for scalable processing of PDF/DOC resumes with OCR fallback.
+
+Key features
+- Intelligent resume processing: automatic text extraction from PDFs, OCR fallback (Tesseract) for scanned documents, and structured information extraction (skills, experience, education).
+- Advanced search: vector-based semantic search (Pinecone), graph-based relationship search (Neo4j), and a hybrid search mode that combines both retrieval paradigms.
+- Gmail resume import: secure OAuth2 Gmail integration with manual and scheduled fetching of attachments (Celery workers enable background scheduled fetch).
+- User interface: dashboard for uploads, detailed resume viewer, advanced search interface with multiple search modes and debug information for match results.
+
+Technology stack
+- Backend: Django 4.2+
+- Databases and storage: PostgreSQL (primary data), Pinecone (vector DB), Neo4j (graph DB)
+- Text processing: NLTK, spaCy, sentence-transformers
+- File processing: pdfminer.six, pdf2image, Tesseract OCR
+- Mail integration: Google OAuth 2.0 + Gmail API
+- Background tasks: Celery + Redis
+- Deployment & runtime: Docker-compatible; expects Redis, PostgreSQL, and Neo4j instances
+
+Implementation notes and guidance for retrieval
+- Resume parsing produces structured fields (skills/education/experience) — index those fields as separate vectors when possible to improve targeted queries like “what certifications” or “where did he study”.
+- Gmail integration uses Google OAuth; document the absolute path to client secrets via env var (GOOGLE_OAUTH_CLIENT_SECRETS).
+- For indexing, include both raw extracted text and normalized structured fields (e.g., education.institution, education.dates, certifications.title).
+- The README includes installation and operation steps; keep those as short bullets to help users and to be retrievable for setup queries.
+
+Status
+- Production-ready backend pieces described; requires environment setup (Postgres, Redis, Neo4j, Pinecone) to run end-to-end.
+- Includes Celery workers configuration for scheduled Gmail fetch tasks.
+
+## YouTube Video Summarizer (youtube-video-summarizer)
+Overview
+YouTube Video Summarizer is a Streamlit-based tool that transcribes, summarizes, and enables interactive study of educational YouTube videos. It uses OpenAI Whisper for transcription and language models to generate concise summaries and interactive Q&A assistance.
+
+Features
+- Fetch YouTube videos and extract audio tracks.
+- Transcribe audio using Whisper.
+- Generate structured summaries and educational notes via LLMs.
+- Streamlit UI with an interactive assistant to query the transcribed material.
+- Environment-variable driven configuration (API keys in .env).
+
+Tech stack and components
+- Frontend: Streamlit
+- Transcription: OpenAI Whisper (local or API)
+- Summarization: LLMs (model choice configurable via .env)
+- Utilities: FFmpeg for audio extraction
+
+Datasets and usage
+- No external dataset required — operates on user-provided YouTube URLs.
+- The README documents setup (FFmpeg installation, .env), and a minimal project structure (src/app.py, assistant.py, transcription.py, summarization.py, youtube_fetcher.py).
+
+Status
+- Designed for local use and interactive summarization; suitable for educational content curation and rapid note generation.
+
+## LLM-Powered Network Optimization Advisor (LLM-Powered-Network-Optimization-Advisor)
+Overview
+A Dockerized API for a network optimization advisor built around a fine-tuned Llama-3-8B model (4-bit quantized) to propose optimization suggestions for network metrics. The repo includes deployment instructions (Docker, NVIDIA Container Toolkit) and a simple HTTP API to request optimizations.
+
+Core elements
+- Model: fine-tuned Llama-3-8B (quantized / LoRA adapters described).
+- Containerization: Docker Compose configuration to build and run the API.
+- Endpoints: POST /optimize (accepts metrics payload), GET /health (service health check).
+
+Implementation notes
+- The repository expects model artifacts in a specified path (app/network_optimizer/) and explicitly avoids committing large model files.
+- The example usage shows the API available at http://localhost:8000 with an /optimize endpoint that accepts a JSON payload of metrics.
+
+Status
+- Dockerized for GPU-enabled hosts; deployment instructions and environment variable expectations are included (MODEL_PATH, CUDA_VISIBLE_DEVICES).
+- Intended for scenarios where low-latency optimization suggestions from a tuned LLM are required.
+
+## Network Optimization AI Assistant & Competition Work (IndabaX Tunisia 2025)
+Overview
+Work on spatiotemporal and telecom KPI anomaly detection and optimization produced an AI assistant and a competition entry (IndabaX Tunisia 2025). The project covers data preprocessing, feature engineering for spatiotemporal variables, LoRA fine-tuning of Llama variants, and a pipeline to generate optimization suggestions for network problems.
+
+Key contributions (as documented)
+- Processed spatiotemporal network KPI datasets for multiclass anomaly prediction (detecting different network problem types).
+- Engineered temporal features such as lags and rolling statistics to transform spatiotemporal variables into predictive features.
+- Applied boosting methods and experimented with LoRA fine-tuning of Llama models for downstream inference and suggestion generation.
+- Trained and exported models (training logs and steps included); exported models saved under "network_optimizer".
+
+Notes for retrieval and indexing
+- Keep separate the competition notebooks, training logs, and final exported model metadata. For retrieval, capture key phrases: "spatiotemporal", "telecom KPIs", "lags", "multiclass prediction", "booster".
+- When reconstructing a project summary, prefer to list exact preprocessing steps (lags, rolling features, target column) and model families tried (LoRA-tuned Llama, XGBoost/LightGBM where used).
+
+Status
+- Training logs and export artifacts included; notebooks reference environment and dependency quirks relevant to reproducing results.
+
+## Human vs AI Text Detection (text-detection)
+Overview
+A Django-based web application and experimental notebooks to classify whether text is human-written or AI-generated. The project centers on training classification models, including BERT-based architectures and lighter ML baselines, and provides a UI to test text classification in real time.
+
+Core features
+- Web interface: text input area that returns a prediction (AI vs human) with confidence.
+- Models: BERT-based classifier (pretrained bert-base-uncased fine-tuned on labeled data) and classical baselines (Logistic Regression, SVM).
+- Utilities: data preprocessing, TF-IDF vectorization, neural models (LSTM example), and model export for serving.
+
+Datasets and training notes
+- Uses a large dataset (e.g., AI_Human.csv ~487k rows) with a binary label 'generated'.
+- Preprocessing includes cleaning, stopword removal, lemmatization, TF-IDF and tokenization for BERT pipelines.
+- BERT training pipeline: tokenizer, DataLoader creation, training loop with AdamW and linear scheduler, then model export to disk (example path /kaggle/working/bert_model/).
+
+Performance and evaluation
+- Documented experiments include Logistic Regression, SVM, neural network (LSTM), and BERT. Reported metrics show strong performance, with the BERT pipeline demonstrating the highest accuracy in the experiments documented.
+
+Status
+- Model export steps are included (save_pretrained), making it possible to load a trained classifier for serving in the Django app.
+
+## Credit Card Fraud Detection & Tabular Modeling Projects
+Overview
+A set of notebooks and scripts for standard tabular modeling problems (credit card fraud detection, waste management, disease outbreak forecasting). Focus is on classical ML pipelines, feature engineering, class imbalance handling, and model selection (RandomForest, XGBoost, LightGBM, CatBoost).
+
+Key points
+- Credit card fraud: heavy class imbalance; sampling and stratification strategies used; LightGBM with tuned hyperparameters reported high ROC AUC.
+- Modeling best-practices: grid search with cross-validation, performance reporting (accuracy, ROC AUC, classification reports), and hyperparameter grids provided for multiple model families.
+- Data merging and feature augmentation with geospatial nearest-neighbor joins, time-based features, and combined lat-lon keys for datasets that include climate or location-based variables.
+
+Datasets
+- Credit card dataset (creditcard.csv) with Class label and transaction features.
+- Spatiotemporal health datasets (Train.csv and supplementary climate/waste/toilet/water sources) with geospatial features and temporal indices for outbreak prediction.
+
+Status
+- Notebooks include EDA, modeling, and export code; training and evaluation pipelines are provided for reproducible experimentation.
+
+## Student Substance Use Survey (survey/R Markdown)
+Overview
+An R Markdown project analyzing survey data about student substance use. The notebook includes data cleaning, EDA, PCA, MCA, clustering (HCPC, k-means), and visualization to identify behavioral and social clusters related to substance use.
+
+Key analyses
+- Descriptive statistics and pie charts for alcohol, smoking, and drug experimentation.
+- PCA to reduce dimensionality and interpret primary variance axes (health vs social/financial factors).
+- MCA for categorical variables and HCPC / k-means clustering to identify behavioral groups and interpret cluster characteristics.
+
+Status
+- Rmd file with code and visualizations; useful for demonstrating statistical analysis and interpretation skills in social-data projects.
+
+## Datasets & Data Engineering Notes
+Datasets referenced across projects:
+- Resume Screening: user-uploaded resumes (PDF/DOCX), Gmail attachments, extracted text corpora.
+- YouTube Summarizer: user-provided YouTube videos (audio extracted via FFmpeg).
+- Network Optimization: telecom KPI CSVs used for competition and anomaly detection; training CSVs for IndabaX dataset paths referenced.
+- Human vs AI detection: AI_Human.csv (large text dataset).
+- Credit card and public datasets: creditcard.csv and various climate/waste/toilet/water CSVs used for spatiotemporal modeling.
+
+Indexing guidance
+- For each dataset mention, capture the dataset path or canonical name (e.g., "AI_Human.csv", "Train.csv", "creditcard.csv") in metadata to help retrieval by dataset name.
+- Where projects merge auxiliary tables (toilets, waste_management, water_sources), index the join keys and transformed feature names (e.g., "Month_Year_lat_lon", "transformed_latitude") to support queries about preprocessing.
+
+## Project-level Implementation & Reproducibility Notes
+- Environment variables and setup steps are documented in the README snippets (create .env, install dependencies via pip, set up Postgres/Redis/Neo4j/Pinecone, install Tesseract and FFmpeg).
+- For heavy-model projects (Llama fine-tuning, BERT training), include hardware and dependency notes (CUDA, GPU, model size) near the training logs. Keep model files out of the repo and reference the expected MODEL_PATH.
+- For reproducible indexing and RAG use: produce normalized, header-aware source files where headings like "Certifications", "Experience", "Projects" are clear lines beginning with "##".
+
+## How to use these project sections for RAG ingestion
+- Use header-aware splitting on "##" to create canonical sections.
+- Within each long project description (training logs, long notebooks), perform token-based chunking with 400–800 char chunks and 50–200 char overlap.
+- Store metadata: {"source":"projects_collection.txt", "section":"<SECTION>", "repo":"<repo-name>", "file":"<filename>"}.
+- Prefer indexing the following sub-elements as separate short chunks for better list retrieval:
+  - Features lists (each bullet)
+  - Technology stack items (each item)
+  - Datasets (each dataset entry)
+  - Short status lines (e.g., "Status: Dockerized", "Status: notebook experiments and exported models present")
+
+## Revision Log
+- 2025-09-13: Compiled long-form project descriptions from provided README-like content and notebooks, normalized headings for hybrid chunking, and provided indexing guidance for RAG ingestion.
+
+## End of file

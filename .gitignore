@@ -1,0 +1,41 @@
+# Node/Next.js
+node_modules/
+.next/
+out/
+dist/
+.vercel/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env (keep examples)
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Python/Backend
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/.venv/
+backend/venv/
+backend/.mypy_cache/
+backend/.pytest_cache/
+backend/.coverage
+backend/coverage/
+
+# Backend data (persist elsewhere in prod)
+backend/data/
+backend/data/**
+
+# Misc you likely don't want in git
+npm-audit.json

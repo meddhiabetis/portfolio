@@ -1,0 +1,80 @@
+Mohamed Dhia Betis – AI and Data Science Student | Kaggle Expert | AI Enthusiast
+
+Overview
+--------
+Mohamed Dhia Betis is a final-year engineering student at the Higher School of Statistics and Information Analysis (ESSAI), Carthage University, Tunisia. 
+He specializes in Data Science and Artificial Intelligence, with a strong background in statistics, mathematics, and computer science. 
+He is passionate about developing and deploying AI systems, especially in the fields of large language models (LLMs), generative AI, 
+natural language processing (NLP), reinforcement learning, and computer vision. His mission is to bridge theory and practice, building 
+scalable, impactful AI applications while sharing knowledge through teaching and community leadership.
+
+Academic Background
+-------------------
+- Engineering Degree (in progress) in Statistics and Information Analysis, specializing in Data Science – ESSAI, Carthage University, Tunisia (2023–2026).
+- Preparatory Course in Mathematics and Physics – Institut Préparatoire aux Études d’Ingénieur de Nabeul (IPEIN), Tunisia (2021–2023).
+- Mathematics Baccalaureate – Lycée Abou Kacem Chebbi de Medjez El Beb, Tunisia (2021).
+
+Professional Experience
+-----------------------
+Huawei – Artificial Intelligence Intern (July–August 2025)
+- Developed a multi-agent NL2SQL system for telecom data using LangGraph, retrieval-augmented generation (RAG), and ChromaDB.
+- Gained industry experience working on applied LLM solutions for real-world telecom datasets.
+
+Smart Conseil – Data Science Intern (June–August 2024)
+- Built a Sexual Content Detector with YOLOv9, using Optuna for hyperparameter optimization to maximize detection accuracy.
+- Designed an Age Detection model for French texts using Logistic Regression, SVM, LSTM, and BERT.
+- Developed a Harmful Meme Detector by combining OCR-based text extraction, toxicity classification, and image/video analysis.
+- Implemented real-time pipelines with FastAPI and Docker for deployment at scale.
+- Designed visualization layers to transform raw API coordinates into user-friendly insights.
+- Collaborated in teams, applied Git/GitLab workflows, and conducted comparative model evaluations to identify best-performing solutions.
+
+ESSAI Machine Learning Club (2023–2025)
+Vice Chairman (May 2024 – May 2025)
+- Organized and led workshops on NLP, Deep Learning, and Computer Vision for students across Tunisia (ESSAI, ENIT, ENICAR, ISIMM, UIK, and online).
+- Mentored student teams on hands-on ML projects, promoting applied learning and interdisciplinary collaboration.
+- Coordinated hackathons, events, and speaker sessions to expand AI awareness in the student community.
+
+Member (Sep 2023 – May 2024)
+- Contributed to technical sessions, projects, and collaborations, strengthening Tunisia’s student AI ecosystem.
+
+Technical Skills
+----------------
+- Languages & Programming: Python, R, Java, SQL.
+- AI & ML: Machine Learning, Deep Learning, NLP, Computer Vision, Reinforcement Learning, Generative AI, LLMs, RAG, LangChain, LangGraph.
+- Tools & Frameworks: PyTorch, TensorFlow, Scikit-learn, Optuna, Hugging Face, FastAPI, Flask, Docker, GitHub Actions, Git/GitLab, ChromaDB.
+- Data Analysis & Visualization: Pandas, NumPy, Matplotlib, Seaborn, R.
+- Backend & Deployment: REST APIs, CI/CD, containerization with Docker.
+
+Languages
+---------
+- Arabic: Native.
+- English: Professional working proficiency.
+- French: Professional working proficiency (DELF B2 certified).
+- Spanish: Elementary proficiency.
+
+Certifications
+--------------
+- Efficient Large Language Model (LLM) Customization.
+- Introduction to Natural Language Processing in Python.
+- Django Web Framework.
+- Data Analysis with R Programming.
+- Google Data Analytics Professional Certificate.
+
+Personal Vision
+---------------
+Mohamed is deeply motivated to work on AI challenges that combine academic depth with practical applications. 
+His interests include developing LLM-powered systems, retrieval-augmented generation pipelines, agentic AI frameworks, 
+and reinforcement learning applications in real-world domains. 
+
+He has proven ability not only in building technical systems but also in deploying them using modern MLOps and backend tools, 
+which makes him stand out as a future AI engineer and researcher. Beyond technical expertise, he has a passion for knowledge-sharing, 
+having organized numerous workshops and training sessions to democratize AI education among Tunisian engineering students.
+
+He is currently seeking end-of-studies internships starting February 2026, ideally in Europe (France, Germany, etc.) or Canada, 
+to contribute to innovative AI projects in LLMs, Generative AI, and agent-based AI systems, while remaining open to reinforcement learning 
+and broader machine learning applications.
+
+Contact Information
+-------------------
+Email: betis.mohamed.dhia@gmail.com
+LinkedIn: https://www.linkedin.com/in/mohamed-dhia-betis
