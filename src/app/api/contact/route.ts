@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(req: Request) {
   try {
     const { name, email, subject, message } = await req.json()
@@ -10,6 +8,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: 'Missing fields' }, { status: 400 })
     }
 
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      // Safe for build/export; only checked at runtime
+      return NextResponse.json({ ok: false, error: 'Missing RESEND_API_KEY' }, { status: 500 })
+    }
+
+    const resend = new Resend(apiKey)
     await resend.emails.send({
       from: 'Portfolio <onboarding@resend.dev>', // or your verified domain sender
       to: 'betis.mohamed.dhia@gmail.com',
