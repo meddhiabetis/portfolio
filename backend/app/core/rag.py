@@ -23,6 +23,12 @@ except Exception:
     SentenceTransformer = None  # type: ignore
     CrossEncoder = None  # type: ignore
 
+# Hugging Face Inference embeddings
+try:
+    from .hf_embeddings import HFInferenceEmbeddings
+except Exception:
+    HFInferenceEmbeddings = None  # type: ignore
+
 
 # -------------------------------
 # Hybrid chunking helpers
@@ -34,15 +40,16 @@ SUBSEC_PATTERN = re.compile(r"(?m)^###\s+(.+?)\s*$")
 
 def _read_text_files(docs_dir: Path) -> List[Tuple[str, str]]:
     """Return list of (relative_name, text) for .txt/.md files."""
-    files: List[Tuple[str, str]] = []
+    out: List[Tuple[str, str]] = []
+    if not docs_dir.exists():
+        return out
     for p in docs_dir.rglob("*"):
         if p.is_file() and p.suffix.lower() in {".txt", ".md"}:
             try:
-                txt = p.read_text(encoding="utf-8", errors="ignore")
+                out.append((str(p.relative_to(docs_dir)), p.read_text(encoding="utf-8", errors="ignore")))
             except Exception:
-                continue
-            files.append((p.name, txt))
-    return files
+                pass
+    return out
 
 
 def _split_sections(text: str) -> List[Tuple[str, int, int]]:
@@ -72,8 +79,7 @@ def _sentences(text: str) -> List[str]:
         return []
     parts: List[str] = []
     last = 0
-    for m in re.finditer(r"([\.!?])\s+(?=[A-Z0-9\[])",
-                         text):
+    for m in re.finditer(r"([\.!?])\s+(?=[A-Z0-9\[])", text):
         end = m.end()
         seg = text[last:end].strip()
         if seg:
@@ -103,9 +109,7 @@ def _chunk_long(text: str, target_chars: int, overlap: int) -> List[str]:
             chunks.append(" ".join(buf).strip())
             # overlap approx by characters
             if overlap > 0 and chunks[-1]:
-                # try to keep last ~overlap chars
                 keep = chunks[-1][-overlap:]
-                # find a reasonable start in keep
                 start_idx = max(0, len(keep) - overlap)
                 buf = [keep[start_idx:]]
                 curr_len = len(buf[0])
@@ -116,7 +120,6 @@ def _chunk_long(text: str, target_chars: int, overlap: int) -> List[str]:
             curr_len += len(s) + 1
     if buf:
         chunks.append(" ".join(buf).strip())
-    # prune empties
     return [c for c in chunks if c]
 
 
@@ -127,11 +130,7 @@ def _hybrid_chunk(
     overlap: int = 120,
 ) -> List[Tuple[str, Dict[str, Any]]]:
     """
-    Hybrid chunking:
-    - split by '## ' headings into high-level sections
-    - inside each section, if long, chunk by sentence windows with overlap
-    - prepend a small section marker in the first chunk for retrieval
-    Returns list of (chunk_text, metadata)
+    Hybrid chunking with section awareness and overlap.
     """
     results: List[Tuple[str, Dict[str, Any]]] = []
     sections = _split_sections(text)
@@ -139,12 +138,8 @@ def _hybrid_chunk(
         raw = text[start:end].strip()
         if not raw:
             continue
-
-        # If very short, single chunk; else windowed chunks
         chunks = _chunk_long(raw, target_chars=chunk_chars, overlap=overlap)
-
         for ci, chunk in enumerate(chunks):
-            # Prepend a tiny marker only to the first chunk of a section
             content = chunk if ci > 0 else f"[Section: {title}]\n{chunk}"
             meta: Dict[str, Any] = {
                 "source": filename,
@@ -157,21 +152,17 @@ def _hybrid_chunk(
 
 
 # -------------------------------
-# Embeddings
+# Embeddings providers
 # -------------------------------
 
 class LocalEmbeddings:
     """
     SentenceTransformer wrapper with model-specific instructions:
-    - E5 family expects 'query: ' and 'passage: ' prefixes
-    - BGE family commonly uses 'query: ' and 'passage: ' as well
-    Others use raw text.
+    - E5/BGE families expect 'query: ' and 'passage: ' prefixes
     """
-
     def __init__(self, model_name: Optional[str] = None):
         if SentenceTransformer is None:
             raise RuntimeError("sentence-transformers not installed. pip install sentence-transformers")
-        # Prefer stronger default
         model_name = model_name or os.getenv("RAG_EMBEDDING_MODEL", "all-mpnet-base-v2")
         self.model_name = model_name
         self.model = SentenceTransformer(model_name)
@@ -207,10 +198,17 @@ class LocalEmbeddings:
 class RAGStore:
     def __init__(self, persist_dir: str | None = None):
         self.persist_dir = str(Path(persist_dir or settings.CHROMA_DB_PATH).expanduser().resolve())
-        self.embeddings = LocalEmbeddings()
+
+        # Prefer HF Inference when available (no local model load)
+        if HFInferenceEmbeddings and os.getenv("HUGGINGFACE_API_KEY"):
+            model_name = os.getenv("RAG_EMBEDDING_MODEL") or "sentence-transformers/all-MiniLM-L6-v2"
+            self.embeddings = HFInferenceEmbeddings(model_name=model_name)
+        else:
+            self.embeddings = LocalEmbeddings()
+
         self._init_vs()
 
-        # Optional cross-encoder reranker (tiny and fast)
+        # Optional cross-encoder reranker (disable via env: RAG_RERANKER_MODEL=disabled)
         self._reranker_name = os.getenv("RAG_RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
         self._reranker: Optional[Any] = None
         self._reranker_loaded: bool = False
@@ -233,7 +231,12 @@ class RAGStore:
         if self._reranker_loaded:
             return
         self._reranker_loaded = True
+        name = (self._reranker_name or "").strip().lower()
+        if not name or name in {"none", "disabled", "off"}:
+            self._reranker = None
+            return
         if CrossEncoder is None:
+            self._reranker = None
             return
         try:
             self._reranker = CrossEncoder(self._reranker_name)
@@ -297,10 +300,17 @@ class RAGStore:
         # Reset and add
         self._reset_vs()
         if texts:
-            self.vs.add_texts(texts=texts, metadatas=metas)
             try:
-                # Chroma 0.4+ auto-persists, but this is harmless for older versions
-                self.vs.persist()  # may no-op
+                self.vs.add_texts(texts=texts, metadatas=metas)
+            except Exception:
+                # some chroma variants accept Document objects only
+                docs = [Document(page_content=t, metadata=m) for t, m in zip(texts, metas)]
+                try:
+                    self.vs.add_documents(docs)
+                except Exception:
+                    pass
+            try:
+                self.vs.persist()
             except Exception:
                 pass
 

@@ -19,7 +19,7 @@ export default function ChatBot() {
   ])
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
-  const messagesEndRef = useRef(null)
+  const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   useEffect(() => { scrollToBottom() }, [messages])
@@ -51,7 +51,12 @@ export default function ChatBot() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, top_k: 6, messages: history })
       })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+      if (!res.ok) {
+        // Friendly error message on server-side failure
+        throw new Error(`HTTP ${res.status}`)
+      }
+
       const data = await res.json()
       const answer = data?.answer ?? 'No answer.'
       const botMessage = {
@@ -63,9 +68,10 @@ export default function ChatBot() {
       }
       setMessages(prev => [...prev, botMessage])
     } catch (err) {
+      // Show user-friendly message instead of raw error
       const botMessage = {
         id: (Date.now() + 1).toString(),
-        text: `Error contacting backend: ${err?.message || String(err)}`,
+        text: 'The AI assistant is not available at the moment. Please try again later.',
         isBot: true,
         timestamp: new Date(),
         welcome: false,
@@ -76,7 +82,7 @@ export default function ChatBot() {
     }
   }
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
@@ -85,7 +91,6 @@ export default function ChatBot() {
 
   return (
     <>
-      {/* Chat Toggle Button */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -97,7 +102,6 @@ export default function ChatBot() {
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
       </motion.button>
 
-      {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -107,7 +111,6 @@ export default function ChatBot() {
             transition={{ type: 'spring', stiffness: 300, damping: 28 }}
             className="fixed bottom-24 right-6 w-80 h-96 bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col z-40 dark:bg-neutral-900 dark:border-neutral-800"
           >
-            {/* Chat Header */}
             <div className="bg-brand-600 text-white p-4 rounded-t-lg">
               <div className="flex items-center gap-3">
                 <div className="bg-white/20 p-2 rounded-full">
@@ -120,7 +123,6 @@ export default function ChatBot() {
               </div>
             </div>
 
-            {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((message) => (
                 <div key={message.id} className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}>
@@ -135,7 +137,6 @@ export default function ChatBot() {
                   </div>
                 </div>
               ))}
-
               {isTyping && (
                 <div className="flex justify-start">
                   <div className="bg-gray-100 text-gray-800 dark:bg-neutral-800 dark:text-neutral-100 p-3 rounded-lg max-w-[80%]">
@@ -150,11 +151,9 @@ export default function ChatBot() {
                   </div>
                 </div>
               )}
-
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
             <div className="p-4 border-t border-gray-200 dark:border-neutral-800">
               <div className="flex gap-2">
                 <input
