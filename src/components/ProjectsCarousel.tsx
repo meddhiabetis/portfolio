@@ -4,8 +4,23 @@ import { useEffect, useMemo, useState } from 'react'
 import { Github, ExternalLink, ChevronLeft, ChevronRight, Star, GitBranch, Sparkles } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
+// Types for slides
+type ProjectCard = {
+  name?: string
+  description?: string
+  tech?: string[]
+  html_url?: string
+  github?: string
+  homepage?: string
+  stars?: number
+  forks?: number
+  topics?: string[]
+  workflow?: string
+  updated_at?: string
+}
+
 // Curated slides (includes GitHub repos and external Kaggle notebooks)
-const curatedBase = [
+const curatedBase: ProjectCard[] = [
   {
     name: 'Resume Screening System',
     github: 'meddhiabetis/resume-screening-django',
@@ -72,7 +87,7 @@ const curatedBase = [
 ]
 
 export default function ProjectsCarousel() {
-  const [slides, setSlides] = useState(curatedBase)
+  const [slides, setSlides] = useState<ProjectCard[]>(curatedBase)
   const [i, setI] = useState(0)
 
   // Enrich GitHub-backed projects with stars, forks, topics, and links
@@ -83,7 +98,7 @@ export default function ProjectsCarousel() {
     const controller = new AbortController()
     ;(async () => {
       try {
-        const results = await Promise.all(
+        const results: ProjectCard[] = await Promise.all(
           withGithub.map(async (p) => {
             const res = await fetch(`https://api.github.com/repos/${p.github}`, { signal: controller.signal })
             if (!res.ok) return { name: p.name }
@@ -106,7 +121,7 @@ export default function ProjectsCarousel() {
             return match ? { ...p, ...match } : p
           })
         )
-      } catch (e) {
+      } catch {
         // ignore fetch aborts or rate limits; keep curated content
       }
     })()
@@ -114,7 +129,8 @@ export default function ProjectsCarousel() {
     return () => controller.abort()
   }, [])
 
-  const current = slides[i] || {}
+  const emptyProject: ProjectCard = { name: 'Project', description: '', tech: [] }
+  const current: ProjectCard = slides[i] ?? emptyProject
   const canPrev = i > 0
   const canNext = i < slides.length - 1
   const dots = useMemo(() => Array.from({ length: slides.length }, (_, k) => k), [slides.length])
@@ -155,7 +171,7 @@ export default function ProjectsCarousel() {
             <div className="overflow-hidden rounded-xl">
               <AnimatePresence mode="wait">
                 <motion.article
-                  key={current.name || 'empty'}
+                  key={current.name ?? 'empty'}
                   initial={{ opacity: 0, x: 40 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -40 }}
@@ -165,25 +181,25 @@ export default function ProjectsCarousel() {
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold">
-                        {current.name || 'Project'}
+                        {current.name ?? 'Project'}
                       </h3>
 
                       <p className="mt-2 text-sm text-muted">
-                        {current.description || 'Project description coming soon.'}
+                        {current.description ?? 'Project description coming soon.'}
                       </p>
 
                       {/* Tech highlights */}
                       <div className="mt-3 flex flex-wrap gap-2">
-                        {(current.tech || []).map((t) => (
+                        {(current.tech ?? []).map((t) => (
                           <span key={t} className="badge-primary">{t}</span>
                         ))}
-                        {(current.topics || []).map((t) => (
+                        {(current.topics ?? []).map((t) => (
                           <span key={t} className="badge-muted">{t}</span>
                         ))}
                       </div>
 
                       {/* Meta (show only if available) */}
-                      {(current.stars || current.forks || current.updated_at) && (
+                      {(typeof current.stars === 'number' || typeof current.forks === 'number' || current.updated_at) && (
                         <div className="mt-4 flex items-center gap-4 text-sm text-muted">
                           {typeof current.stars === 'number' && (
                             <span className="inline-flex items-center gap-1">
@@ -195,7 +211,7 @@ export default function ProjectsCarousel() {
                               <GitBranch size={14} /> {current.forks}
                             </span>
                           )}
-                          {current.updated_at && <span>Updated {new Date(current.updated_at).toLocaleDateString()}</span>}
+                          {current.updated_at && <span>Updated {new Date(current.updated_at as string).toLocaleDateString()}</span>}
                         </div>
                       )}
                     </div>

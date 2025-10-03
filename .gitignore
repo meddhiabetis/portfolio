@@ -39,3 +39,7 @@ backend/data/**
 
 # Misc you likely don't want in git
 npm-audit.json
+
+/ai-ds-portfolio@1.0.0
+/next
+/npm

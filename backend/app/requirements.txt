@@ -9,3 +9,4 @@ httpx
 pydantic
 python-dotenv
 requests
+gunicorn
