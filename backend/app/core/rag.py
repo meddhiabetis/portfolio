@@ -53,10 +53,6 @@ def _read_text_files(docs_dir: Path) -> List[Tuple[str, str]]:
 
 
 def _split_sections(text: str) -> List[Tuple[str, int, int]]:
-    """
-    Split by '## ' headings. Returns a list of (section_title, start_idx, end_idx).
-    If no '##', returns a single section 'General'.
-    """
     matches = list(SEC_PATTERN.finditer(text))
     if not matches:
         return [("General", 0, len(text))]
@@ -70,10 +66,6 @@ def _split_sections(text: str) -> List[Tuple[str, int, int]]:
 
 
 def _sentences(text: str) -> List[str]:
-    """
-    Simple sentence splitter without external deps.
-    Splits on punctuation followed by whitespace and a capital/number/bracket.
-    """
     text = re.sub(r"\s+", " ", text).strip()
     if not text:
         return []
@@ -92,9 +84,6 @@ def _sentences(text: str) -> List[str]:
 
 
 def _chunk_long(text: str, target_chars: int, overlap: int) -> List[str]:
-    """
-    Sliding-window chunking by characters, trying to end on sentence boundary.
-    """
     if len(text) <= target_chars * 1.2:
         return [text.strip()]
     sents = _sentences(text)
@@ -107,7 +96,6 @@ def _chunk_long(text: str, target_chars: int, overlap: int) -> List[str]:
             curr_len += len(s) + 1
         else:
             chunks.append(" ".join(buf).strip())
-            # overlap approx by characters
             if overlap > 0 and chunks[-1]:
                 keep = chunks[-1][-overlap:]
                 start_idx = max(0, len(keep) - overlap)
@@ -129,9 +117,6 @@ def _hybrid_chunk(
     chunk_chars: int = 600,
     overlap: int = 120,
 ) -> List[Tuple[str, Dict[str, Any]]]:
-    """
-    Hybrid chunking with section awareness and overlap.
-    """
     results: List[Tuple[str, Dict[str, Any]]] = []
     sections = _split_sections(text)
     for si, (title, start, end) in enumerate(sections):
@@ -202,6 +187,7 @@ class RAGStore:
         # Prefer HF Inference when available (no local model load)
         if HFInferenceEmbeddings and os.getenv("HUGGINGFACE_API_KEY"):
             model_name = os.getenv("RAG_EMBEDDING_MODEL") or "sentence-transformers/all-MiniLM-L6-v2"
+            # Auto-prefix inside HFInferenceEmbeddings as well
             self.embeddings = HFInferenceEmbeddings(model_name=model_name)
         else:
             self.embeddings = LocalEmbeddings()
@@ -252,7 +238,15 @@ class RAGStore:
         return self.vs.similarity_search(query, k=k)
 
     def retrieve_mmr(self, query: str, k: int = 6, fetch_k: int = 20, lambda_mult: float = 0.5) -> List[Document]:
-        return self.vs.maximal_marginal_relevance_search(query, k=k, fetch_k=fetch_k, lambda_mult=lambda_mult)
+        # Use the sync API if available; otherwise, fall back.
+        if hasattr(self.vs, "max_marginal_relevance_search"):
+            try:
+                return self.vs.max_marginal_relevance_search(query, k=k, fetch_k=fetch_k, lambda_mult=lambda_mult)
+            except Exception:
+                pass
+        # Some versions only expose an async "amax_marginal_relevance_search", which we won't call here.
+        # Fall back to plain similarity search.
+        return self.vs.similarity_search(query, k=k)
 
     def retrieve_with_scores(self, query: str, k: int = 6) -> List[Tuple[Document, float | None]]:
         try:
@@ -303,7 +297,6 @@ class RAGStore:
             try:
                 self.vs.add_texts(texts=texts, metadatas=metas)
             except Exception:
-                # some chroma variants accept Document objects only
                 docs = [Document(page_content=t, metadata=m) for t, m in zip(texts, metas)]
                 try:
                     self.vs.add_documents(docs)

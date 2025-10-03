@@ -22,7 +22,13 @@ class HFInferenceEmbeddings:
         self.token = os.getenv("HUGGINGFACE_API_KEY", "").strip()
         if not self.token:
             raise RuntimeError("Missing HUGGINGFACE_API_KEY")
-        self.model_name = (model_name or os.getenv("RAG_EMBEDDING_MODEL") or "sentence-transformers/all-MiniLM-L6-v2").strip()
+
+        m = (model_name or os.getenv("RAG_EMBEDDING_MODEL") or "sentence-transformers/all-MiniLM-L6-v2").strip()
+        # Auto-prefix common ST models if user provided bare name like "all-mpnet-base-v2"
+        if "/" not in m:
+            m = f"sentence-transformers/{m}"
+        self.model_name = m
+
         self.timeout = timeout
         self.batch_size = max(1, int(batch_size))
 
@@ -45,6 +51,13 @@ class HFInferenceEmbeddings:
         payload = {"inputs": inputs}
         with httpx.Client(timeout=self.timeout) as client:
             r = client.post(self._endpoint(), headers=headers, json=payload)
+            # Provide clearer guidance on common 4xx
+            if r.status_code in (401, 403):
+                detail = (r.text or "").strip()[:300]
+                raise RuntimeError(
+                    f"Hugging Face API auth/permissions error ({r.status_code}). "
+                    f"Check HUGGINGFACE_API_KEY and model repo id '{self.model_name}'. Detail: {detail}"
+                )
             r.raise_for_status()
             data = r.json()
         if isinstance(data, dict) and "embeddings" in data:
