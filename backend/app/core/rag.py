@@ -244,8 +244,6 @@ class RAGStore:
                 return self.vs.max_marginal_relevance_search(query, k=k, fetch_k=fetch_k, lambda_mult=lambda_mult)
             except Exception:
                 pass
-        # Some versions only expose an async "amax_marginal_relevance_search", which we won't call here.
-        # Fall back to plain similarity search.
         return self.vs.similarity_search(query, k=k)
 
     def retrieve_with_scores(self, query: str, k: int = 6) -> List[Tuple[Document, float | None]]:
