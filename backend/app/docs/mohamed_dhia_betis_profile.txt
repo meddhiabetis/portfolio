@@ -1,21 +1,28 @@
-Mohamed Dhia Betis – AI and Data Science Student | Kaggle Expert | AI Enthusiast
+Mohamed Dhia Betis – Data Engineer | AI & LLM Engineering
 
 Overview
 --------
-Mohamed Dhia Betis is a final-year engineering student at the Higher School of Statistics and Information Analysis (ESSAI), Carthage University, Tunisia. 
-He specializes in Data Science and Artificial Intelligence, with a strong background in statistics, mathematics, and computer science. 
-He is passionate about developing and deploying AI systems, especially in the fields of large language models (LLMs), generative AI, 
-natural language processing (NLP), reinforcement learning, and computer vision. His mission is to bridge theory and practice, building 
-scalable, impactful AI applications while sharing knowledge through teaching and community leadership.
+Data Engineer at MINOTORE and Data Science Engineer graduate from ESSAI, with a strong interest in AI, Large Language Models, and Generative AI. Experienced in machine learning, NLP, and computer vision, with hands-on projects in RAG, multi-agent systems, and AI deployment. Former Vice Chairman of ESSAI Machine Learning Club, where he led workshops and mentored students.
 
 Academic Background
 -------------------
-- Engineering Degree (in progress) in Statistics and Information Analysis, specializing in Data Science – ESSAI, Carthage University, Tunisia (2023–2026).
+- Engineering Degree in Statistics and Information Analysis, specializing in Data Science – ESSAI, Carthage University, Tunisia (2023–2026). Graduated in 2026.
 - Preparatory Course in Mathematics and Physics – Institut Préparatoire aux Études d’Ingénieur de Nabeul (IPEIN), Tunisia (2021–2023).
 - Mathematics Baccalaureate – Lycée Abou Kacem Chebbi de Medjez El Beb, Tunisia (2021).
 
 Professional Experience
 -----------------------
+MINOTORE – Data Engineer (Sep 2026 – Present)
+Full-time · Tunis, Tunisia · On-site.
+
+MINOTORE – AI Engineer Intern (Feb 2026 – Jul 2026)
+Internship / graduation project · Tunis, Tunisia · On-site.
+Developed an AI-assisted Applicant Tracking System for automated CV parsing, candidate scoring, and recruitment workflows.
+- Built a resume parsing pipeline combining document extraction, OCR fallback, LLM-based structured extraction, and validation.
+- Developed candidate-job scoring using skills, experience, education, languages, and semantic relevance.
+- Benchmarked extraction/OCR methods and semantic models to select the final approaches used by the system.
+- Integrated the AI services with Odoo 16 and implemented recruitment workflows, traceability, duplicate detection, blacklist checks, and access control.
+
 Huawei – Artificial Intelligence Intern (July–August 2025)
 - Developed a multi-agent NL2SQL system for telecom data using LangGraph, retrieval-augmented generation (RAG), and ChromaDB.
 - Gained industry experience working on applied LLM solutions for real-world telecom datasets.
@@ -39,6 +46,8 @@ Member (Sep 2023 – May 2024)
 
 Technical Skills
 ----------------
+- Primary skills: Python, Data Engineering, Large Language Models (LLMs), SQL, FastAPI.
+- Supporting skills: PostgreSQL, Docker, RAG, LangGraph, LangChain, NLP, Transformers, Embeddings, Odoo.
 - Languages & Programming: Python, R, Java, SQL.
 - AI & ML: Machine Learning, Deep Learning, NLP, Computer Vision, Reinforcement Learning, Generative AI, LLMs, RAG, LangChain, LangGraph.
 - Tools & Frameworks: PyTorch, TensorFlow, Scikit-learn, Optuna, Hugging Face, FastAPI, Flask, Docker, GitHub Actions, Git/GitLab, ChromaDB.
@@ -48,7 +57,7 @@ Technical Skills
 Languages
 ---------
 - Arabic: Native.
-- English: Professional working proficiency.
+- English: Certified (TOEIC B2).
 - French: Professional working proficiency (DELF B2 certified).
 - Spanish: Elementary proficiency.
 
@@ -59,20 +68,6 @@ Certifications
 - Django Web Framework.
 - Data Analysis with R Programming.
 - Google Data Analytics Professional Certificate.
-
-Personal Vision
----------------
-Mohamed is deeply motivated to work on AI challenges that combine academic depth with practical applications. 
-His interests include developing LLM-powered systems, retrieval-augmented generation pipelines, agentic AI frameworks, 
-and reinforcement learning applications in real-world domains. 
-
-He has proven ability not only in building technical systems but also in deploying them using modern MLOps and backend tools, 
-which makes him stand out as a future AI engineer and researcher. Beyond technical expertise, he has a passion for knowledge-sharing, 
-having organized numerous workshops and training sessions to democratize AI education among Tunisian engineering students.
-
-He is currently seeking end-of-studies internships starting February 2026, ideally in Europe (France, Germany, etc.) or Canada, 
-to contribute to innovative AI projects in LLMs, Generative AI, and agent-based AI systems, while remaining open to reinforcement learning 
-and broader machine learning applications.
 
 Contact Information
 -------------------

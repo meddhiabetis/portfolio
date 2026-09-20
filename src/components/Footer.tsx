@@ -9,13 +9,25 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <div className="text-lg font-semibold">Mohamed Dhia Betis</div>
-            <div className="text-sm text-muted">AI / Data Science — LLMs, NLP, CV, Backend</div>
+            <div className="text-sm text-muted">
+              Data Engineer | AI &amp; LLM Engineering
+            </div>
           </div>
           <div className="flex items-center gap-4 text-muted">
-            <a href="https://github.com/meddhiabetis" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <a
+              href="https://github.com/meddhiabetis"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
               <Github size={18} />
             </a>
-            <a href="https://linkedin.com/in/mohamed-dhia-betis/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <a
+              href="https://linkedin.com/in/mohamed-dhia-betis/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
               <Linkedin size={18} />
             </a>
             <a href="mailto:betis.mohamed.dhia@gmail.com" aria-label="Email">

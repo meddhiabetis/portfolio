@@ -6,13 +6,13 @@ const items = [
   {
     school:
       'Higher School of Statistics and Information Analysis (ESSAI), University of Carthage',
-    degree: 'Engineering Degree (Statistics & Data Science) — in progress',
-    period: '2023–2026 (expected)',
+    degree:
+      'Engineering Degree (Statistics & Data Science) — graduated in 2026',
+    period: '2023–2026',
     logo: '/images/Schools/essai.png',
   },
   {
-    school:
-      'Preparatory Institute for Engineering Studies of Nabeul (IPEIN)',
+    school: 'Preparatory Institute for Engineering Studies of Nabeul (IPEIN)',
     degree: 'Preparatory Cycle (Mathematics & Physics) — ranked top ~30%',
     period: '2021–2023',
     logo: '/images/Schools/ipein.png',
@@ -35,7 +35,7 @@ export default function Education() {
         <div className="mt-6 space-y-4">
           {items.map((e) => (
             <div key={e.school} className="card p-5">
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 {/* Left: logo + school/degree */}
                 <div className="flex items-start gap-3 min-w-0">
                   <div className="relative w-10 h-10 rounded bg-white dark:bg-white ring-1 ring-black/10 overflow-hidden flex-shrink-0">
@@ -49,12 +49,10 @@ export default function Education() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <div className="font-semibold leading-tight truncate">
+                    <div className="font-semibold leading-tight">
                       {e.school}
                     </div>
-                    <div className="text-sm text-muted">
-                      {e.degree}
-                    </div>
+                    <div className="text-sm text-muted">{e.degree}</div>
                   </div>
                 </div>
 

@@ -13,7 +13,7 @@ type Lang = {
 
 const languages: Lang[] = [
   { flagSrc: '/images/flags/tn.svg', code: 'TN', name: 'Arabic',  level: 'Native' },
-  { flagSrc: '/images/flags/gb.svg', code: 'EN', name: 'English', level: 'Fluent' },
+  { flagSrc: '/images/flags/gb.svg', code: 'EN', name: 'English', level: 'Certified (TOEIC B2)' },
   { flagSrc: '/images/flags/fr.svg', code: 'FR', name: 'French',  level: 'Certified (DELF B2)' },
   { flagSrc: '/images/flags/es.svg', code: 'ES', name: 'Spanish', level: 'Elementary' },
 ]

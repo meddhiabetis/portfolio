@@ -9,6 +9,15 @@
 ## Projects Overview
 This document collects long, retrieval-friendly descriptions of Mohamed Dhia Betis’s software and research projects. Each project section opens with a concise overview, followed by technology stack, key features or components, datasets, and implementation notes. Use header-aware splitting on the "## " lines and token-based chunking for long paragraphs (projects with long notebooks or training logs). Preserve named entities (tool and repo names) exactly to support hybrid sparse+dense retrieval.
 
+## AI-Assisted Applicant Tracking System — MINOTORE Graduation Project
+Completed during the AI Engineer internship, Feb 2026 – Jul 2026, at MINOTORE in Tunis, Tunisia (on-site).
+An Odoo-integrated ATS combining CV parsing, LLM-based structured extraction, semantic candidate-job scoring, recruitment workflow automation, and explainable evaluation.
+- Resume parsing: FastAPI, PyMuPDF4LLM, python-docx, Docling, Tesseract, LLM-based structured extraction, Pydantic validation, Docker.
+- Candidate-job scoring: FastAPI, Pydantic, sentence-transformers, multilingual embeddings, SQLite embedding cache, NumPy, Docker. Scoring considers skills, experience, education, languages, and semantic relevance.
+- Integration: Odoo 16, Python, PostgreSQL, XML views, JavaScript/CSS extensions, JSON service contracts.
+- Recruitment workflows include candidate/application separation, access control, interview tracking, feedback, duplicate detection, blacklist checks, traceability, post-parsing filters, skill graph configuration, explainability, and cross-job recommendations.
+No public source-code link is provided. This is separate from the Django Resume Screening System below.
+
 ## Resume Screening System (resume-screening-django)
 Overview
 The Resume Screening System is a Django-based resume processing and search platform that combines semantic vector search and graph-based relationship analysis to provide advanced resume matching and structured candidate insights. It supports automatic Gmail resume import using Google OAuth and is designed for scalable processing of PDF/DOC resumes with OCR fallback.
@@ -69,11 +78,11 @@ A Dockerized API for a network optimization advisor built around a fine-tuned Ll
 Core elements
 - Model: fine-tuned Llama-3-8B (quantized / LoRA adapters described).
 - Containerization: Docker Compose configuration to build and run the API.
-- Endpoints: POST /optimize (accepts metrics payload), GET /health (service health check).
+- Endpoints: POST /predict (accepts metrics payload), GET /health (service health check).
 
 Implementation notes
 - The repository expects model artifacts in a specified path (app/network_optimizer/) and explicitly avoids committing large model files.
-- The example usage shows the API available at http://localhost:8000 with an /optimize endpoint that accepts a JSON payload of metrics.
+- The example usage shows the API available at http://localhost:8000 with an /predict endpoint that accepts a JSON payload of metrics.
 
 Status
 - Dockerized for GPU-enabled hosts; deployment instructions and environment variable expectations are included (MODEL_PATH, CUDA_VISIBLE_DEVICES).

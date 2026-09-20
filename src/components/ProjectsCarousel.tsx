@@ -1,12 +1,20 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { Github, ExternalLink, ChevronLeft, ChevronRight, Star, GitBranch, Sparkles } from 'lucide-react'
+import {
+  Github,
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  GitBranch,
+} from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 // Types for slides
 type ProjectCard = {
   name?: string
+  subtitle?: string
   description?: string
   tech?: string[]
   html_url?: string
@@ -22,13 +30,54 @@ type ProjectCard = {
 // Curated slides (includes GitHub repos and external Kaggle notebooks)
 const curatedBase: ProjectCard[] = [
   {
+    name: 'AI-Assisted Applicant Tracking System',
+    subtitle: 'Graduation Project — MINOTORE',
+    description:
+      'An Odoo-integrated ATS combining CV parsing, LLM-based structured extraction, semantic candidate-job scoring, recruitment workflow automation, and explainable evaluation.',
+    workflow:
+      'Document extraction → OCR fallback → LLM-based structured extraction and Pydantic validation → semantic candidate-job scoring → Odoo 16 recruitment workflows.',
+    tech: [
+      'Python',
+      'FastAPI',
+      'Odoo 16',
+      'PostgreSQL',
+      'Docker',
+      'LLMs',
+      'NLP',
+      'Embeddings',
+    ],
+  },
+  {
     name: 'Resume Screening System',
     github: 'meddhiabetis/resume-screening-django',
     description:
       'Django platform for resume ingestion and hybrid search (semantic + graph) with optional Gmail import.',
     workflow:
       'PDF/DOC/DOCX parsing → OCR fallback (Tesseract) → structure (skills/education/experience) → Pinecone semantic search + Neo4j relationships → advanced search UI with debug.',
-    tech: ['Django', 'PostgreSQL', 'Pinecone', 'Neo4j', 'NLTK', 'spaCy', 'Sentence-Transformers', 'Celery', 'Redis', 'Tesseract', 'pdfminer.six', 'pdf2image', 'Google OAuth2'],
+    tech: [
+      'Django',
+      'PostgreSQL',
+      'Pinecone',
+      'Neo4j',
+      'NLTK',
+      'spaCy',
+      'Sentence-Transformers',
+      'Celery',
+      'Redis',
+      'Tesseract',
+      'pdfminer.six',
+      'pdf2image',
+      'Google OAuth2',
+    ],
+  },
+  {
+    name: 'LLM‑Powered Network Optimization Advisor',
+    github: 'meddhiabetis/LLM-Powered-Network-Optimization-Advisor',
+    description:
+      'Dockerized API around a LoRA‑tuned Llama‑3‑8B for network KPI optimization suggestions.',
+    workflow:
+      'Receive KPI metrics → LLM (LoRA) reasoning → /predict REST endpoint → health checks + env configuration (GPU‑ready).',
+    tech: ['FastAPI', 'Docker', 'Llama‑3‑8B (LoRA)', 'CUDA', 'NVIDIA Toolkit'],
   },
   {
     name: 'YouTube Video Summarizer',
@@ -40,26 +89,24 @@ const curatedBase: ProjectCard[] = [
     tech: ['Streamlit', 'OpenAI Whisper', 'FFmpeg', 'Python', 'LLM'],
   },
   {
-    name: 'LLM‑Powered Network Optimization Advisor',
-    github: 'meddhiabetis/LLM-Powered-Network-Optimization-Advisor',
-    description:
-      'Dockerized API around a LoRA‑tuned Llama‑3‑8B for network KPI optimization suggestions.',
-    workflow:
-      'Receive KPI metrics → LLM (LoRA) reasoning → /optimize REST endpoint → health checks + env configuration (GPU‑ready).',
-    tech: ['FastAPI', 'Docker', 'Llama‑3‑8B (LoRA)', 'CUDA', 'NVIDIA Toolkit'],
-  },
-  {
     name: 'AI vs Human Text Classification',
     // If you have a repo for this, set the "github" field like "owner/repo"
     description:
       'Django UI + notebooks to classify whether text is AI‑generated or human‑written using BERT and classical ML baselines.',
     workflow:
       'Preprocess → TF‑IDF + classical models → LSTM experiment → BERT fine‑tuning → export for serving in web app.',
-    tech: ['Django', 'scikit‑learn', 'TensorFlow/Keras (LSTM)', 'BERT', 'Transformers'],
+    tech: [
+      'Django',
+      'scikit‑learn',
+      'TensorFlow/Keras (LSTM)',
+      'BERT',
+      'Transformers',
+    ],
   },
   {
     name: 'Q‑Learning Agent in a Hazardous Grid World',
-    homepage: 'https://www.kaggle.com/code/betismeddhia/q-learning-agent-in-a-hazardous-grid-world',
+    homepage:
+      'https://www.kaggle.com/code/betismeddhia/q-learning-agent-in-a-hazardous-grid-world',
     description:
       'Reinforcement learning notebook implementing Q‑Learning in a stochastic, hazardous grid world.',
     workflow:
@@ -68,7 +115,8 @@ const curatedBase: ProjectCard[] = [
   },
   {
     name: 'Substance Use Survey — PCA/MCA & Clustering (R)',
-    homepage: 'https://www.kaggle.com/code/betismeddhia/substance-use-survey-using-pca-mca-k-means',
+    homepage:
+      'https://www.kaggle.com/code/betismeddhia/substance-use-survey-using-pca-mca-k-means',
     description:
       'Realised by Betis Mohamed Dhia • Supervised by Mr. Ghazi Bel Mufti. Statistical analysis of student substance use behaviors.',
     workflow:
@@ -77,12 +125,19 @@ const curatedBase: ProjectCard[] = [
   },
   {
     name: 'African Credit Scoring Challenge',
-    homepage: 'https://www.kaggle.com/code/betismeddhia/african-credit-scoring-challenge',
+    homepage:
+      'https://www.kaggle.com/code/betismeddhia/african-credit-scoring-challenge',
     description:
       'Imbalanced credit scoring notebook applying ML techniques and evaluation tailored for skewed classes.',
     workflow:
       'EDA → preprocessing & imbalance handling → model training (tree/boosting ensembles) → metrics (ROC AUC, PR‑AUC) and comparison.',
-    tech: ['Python', 'Pandas', 'scikit‑learn', 'XGBoost/LightGBM', 'Imbalanced‑learn'],
+    tech: [
+      'Python',
+      'Pandas',
+      'scikit‑learn',
+      'XGBoost/LightGBM',
+      'Imbalanced‑learn',
+    ],
   },
 ]
 
@@ -100,7 +155,10 @@ export default function ProjectsCarousel() {
       try {
         const results: ProjectCard[] = await Promise.all(
           withGithub.map(async (p) => {
-            const res = await fetch(`https://api.github.com/repos/${p.github}`, { signal: controller.signal })
+            const res = await fetch(
+              `https://api.github.com/repos/${p.github}`,
+              { signal: controller.signal }
+            )
             if (!res.ok) return { name: p.name }
             const data = await res.json()
             return {
@@ -129,19 +187,27 @@ export default function ProjectsCarousel() {
     return () => controller.abort()
   }, [])
 
-  const emptyProject: ProjectCard = { name: 'Project', description: '', tech: [] }
+  const emptyProject: ProjectCard = {
+    name: 'Project',
+    description: '',
+    tech: [],
+  }
   const current: ProjectCard = slides[i] ?? emptyProject
   const canPrev = i > 0
   const canNext = i < slides.length - 1
-  const dots = useMemo(() => Array.from({ length: slides.length }, (_, k) => k), [slides.length])
+  const dots = useMemo(
+    () => Array.from({ length: slides.length }, (_, k) => k),
+    [slides.length]
+  )
 
   return (
     <section id="projects" className="section">
       <div className="container">
         <h2>Projects</h2>
         <p className="mt-2 text-muted max-w-3xl">
-          Selected projects with brief workflow summaries and <span className="font-semibold">highlighted technologies</span>.
-          Swipe or use the arrows to browse.
+          Selected projects with brief workflow summaries and{' '}
+          <span className="font-semibold">highlighted technologies</span>. Use
+          the arrows to browse.
         </p>
 
         {slides.length === 0 ? (
@@ -157,7 +223,9 @@ export default function ProjectsCarousel() {
               >
                 <ChevronLeft size={18} /> Prev
               </button>
-              <div className="text-sm text-muted">{i + 1} / {slides.length}</div>
+              <div className="text-sm text-muted">
+                {i + 1} / {slides.length}
+              </div>
               <button
                 className="btn px-3 py-2 border rounded-md disabled:opacity-40"
                 onClick={() => setI((p) => (p < slides.length - 1 ? p + 1 : p))}
@@ -183,23 +251,35 @@ export default function ProjectsCarousel() {
                       <h3 className="text-xl font-semibold">
                         {current.name ?? 'Project'}
                       </h3>
+                      {current.subtitle && (
+                        <p className="mt-1 text-sm font-medium text-muted">
+                          {current.subtitle}
+                        </p>
+                      )}
 
                       <p className="mt-2 text-sm text-muted">
-                        {current.description ?? 'Project description coming soon.'}
+                        {current.description ??
+                          'Project description coming soon.'}
                       </p>
 
                       {/* Tech highlights */}
                       <div className="mt-3 flex flex-wrap gap-2">
                         {(current.tech ?? []).map((t) => (
-                          <span key={t} className="badge-primary">{t}</span>
+                          <span key={t} className="badge-primary">
+                            {t}
+                          </span>
                         ))}
                         {(current.topics ?? []).map((t) => (
-                          <span key={t} className="badge-muted">{t}</span>
+                          <span key={t} className="badge-muted">
+                            {t}
+                          </span>
                         ))}
                       </div>
 
                       {/* Meta (show only if available) */}
-                      {(typeof current.stars === 'number' || typeof current.forks === 'number' || current.updated_at) && (
+                      {(typeof current.stars === 'number' ||
+                        typeof current.forks === 'number' ||
+                        current.updated_at) && (
                         <div className="mt-4 flex items-center gap-4 text-sm text-muted">
                           {typeof current.stars === 'number' && (
                             <span className="inline-flex items-center gap-1">
@@ -211,44 +291,57 @@ export default function ProjectsCarousel() {
                               <GitBranch size={14} /> {current.forks}
                             </span>
                           )}
-                          {current.updated_at && <span>Updated {new Date(current.updated_at as string).toLocaleDateString()}</span>}
+                          {current.updated_at && (
+                            <span>
+                              Updated{' '}
+                              {new Date(
+                                current.updated_at as string
+                              ).toLocaleDateString()}
+                            </span>
+                          )}
                         </div>
                       )}
                     </div>
 
-                    <div className="w-full md:w-60 flex md:flex-col gap-3">
-                      {current.html_url || current.github ? (
-                        <a
-                          href={current.html_url || (current.github ? `https://github.com/${current.github}` : '#')}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-primary w-full px-4 py-2"
-                        >
-                          <Github size={16} /> Code
-                        </a>
-                      ) : (
-                        <div className="w-full px-4 py-2 rounded border text-muted flex items-center justify-center gap-2">
-                          <Sparkles size={16} /> Notebook / internal
-                        </div>
-                      )}
+                    {(current.html_url ||
+                      current.github ||
+                      current.homepage) && (
+                      <div className="w-full md:w-60 flex flex-col gap-3">
+                        {current.html_url || current.github ? (
+                          <a
+                            href={
+                              current.html_url ||
+                              (current.github
+                                ? `https://github.com/${current.github}`
+                                : '#')
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-primary w-full px-4 py-2"
+                          >
+                            <Github size={16} /> Code
+                          </a>
+                        ) : null}
 
-                      {current.homepage && (
-                        <a
-                          href={current.homepage}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-outline w-full px-4 py-2"
-                        >
-                          <ExternalLink size={16} /> View
-                        </a>
-                      )}
-                    </div>
+                        {current.homepage && (
+                          <a
+                            href={current.homepage}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-outline w-full px-4 py-2"
+                          >
+                            <ExternalLink size={16} /> View
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   {/* Workflow */}
                   {current.workflow && (
                     <p className="mt-4 text-sm text-muted">
-                      <span className="font-semibold">Workflow:</span> {current.workflow}
+                      <span className="font-semibold">Workflow:</span>{' '}
+                      {current.workflow}
                     </p>
                   )}
                 </motion.article>
@@ -260,9 +353,14 @@ export default function ProjectsCarousel() {
                 <button
                   key={d}
                   onClick={() => setI(d)}
-                  className={`h-2.5 w-2.5 rounded-full ${d === i ? 'bg-indigo-600' : 'bg-white/30 dark:bg-white/10'}`}
+                  className="flex h-8 w-8 items-center justify-center rounded-full"
                   aria-label={`Go to project ${d + 1}`}
-                />
+                  aria-current={d === i ? 'true' : undefined}
+                >
+                  <span
+                    className={`h-2.5 w-2.5 rounded-full ${d === i ? 'bg-indigo-600' : 'bg-gray-400 dark:bg-gray-600'}`}
+                  />
+                </button>
               ))}
             </div>
           </div>

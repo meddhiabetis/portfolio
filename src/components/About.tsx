@@ -18,10 +18,13 @@ export default function About() {
           <h2>About Me</h2>
 
           <p className="mt-4 text-muted leading-relaxed max-w-5xl">
-            <span className="font-semibold">Final‑year engineering student</span> at ESSAI (Carthage University, Tunisia),
-            specializing in <span className="font-semibold">Statistics & Data Science</span>. I build applied AI systems across
-            <span className="font-semibold"> LLMs</span>, <span className="font-semibold">Machine Learning</span>, <span className="font-semibold">NLP</span>, and
-            <span className="font-semibold"> Computer Vision</span>, with strong attention to production quality (APIs, deployment, evaluation).
+            <span className="font-semibold">Data Engineer at MINOTORE</span> and
+            Data Science Engineer graduate from ESSAI, with a strong interest in
+            AI, Large Language Models, and Generative AI. Experienced in machine
+            learning, NLP, and computer vision, with hands-on projects in RAG,
+            multi-agent systems, and AI deployment. Former Vice Chairman of
+            ESSAI Machine Learning Club, where I led workshops and mentored
+            students.
           </p>
 
           {/* Three equal cards on one row (md+), stacked on mobile */}
@@ -33,7 +36,7 @@ export default function About() {
                 <div className="font-semibold">Core Focus</div>
               </div>
               <ul className="mt-3 space-y-1.5 text-sm text-muted">
-                <li>• AI, Machine Learning, and LLMs</li>
+                <li>• Data engineering, AI, and LLMs</li>
                 <li>• Agentic AI (LangGraph) and RAG workflows</li>
                 <li>• Reinforcement Learning (applied interest)</li>
                 <li>• Computer Vision and NLP</li>
@@ -49,9 +52,19 @@ export default function About() {
                 <div className="font-semibold">Highlights</div>
               </div>
               <ul className="mt-3 space-y-1.5 text-sm text-muted">
-                <li>• Pursuing Engineering Degree in Statistics & Data Science (≈ Master’s level)</li>
-                <li>• AI Intern at Huawei (2025): multi‑agent NL2SQL with LangGraph, RAG, ChromaDB</li>
-                <li>• Data Science Intern at Smart Conseil (2024): CV/NLP pipelines; FastAPI + Docker</li>
+                <li>• Engineering graduate — ESSAI, 2026</li>
+                <li>
+                  • MINOTORE graduation project (2026): CV parsing, semantic
+                  scoring, and recruitment workflows
+                </li>
+                <li>
+                  • AI Intern at Huawei (2025): multi‑agent NL2SQL with
+                  LangGraph, RAG, ChromaDB
+                </li>
+                <li>
+                  • Data Science Intern at Smart Conseil (2024): CV/NLP
+                  pipelines; FastAPI + Docker
+                </li>
                 <li>• Kaggle Expert</li>
                 <li>• Multilingual: Arabic, English, French, some Spanish</li>
               </ul>
@@ -65,12 +78,19 @@ export default function About() {
               </div>
               <div className="mt-3 text-sm text-muted space-y-1.5">
                 <p>
-                  Vice Chairman @ ESSAI ML Club (2024–2025): led <span className="font-medium">10+ workshops</span> across Tunisian engineering
-                  schools (ESSAI, ENIT, ENICAR, ISIMM, UIK).
+                  Vice Chairman @ ESSAI ML Club (2024–2025): led{' '}
+                  <span className="font-medium">10+ workshops</span> across
+                  Tunisian engineering schools (ESSAI, ENIT, ENICAR, ISIMM,
+                  UIK).
                 </p>
                 <ul className="list-none space-y-1">
-                  <li>• AI topics: ML, NLP, CV, LLMs; hands‑on labs and mentorship</li>
-                  <li>• Organized hackathons, speaker sessions, and community events</li>
+                  <li>
+                    • AI topics: ML, NLP, CV, LLMs; hands‑on labs and mentorship
+                  </li>
+                  <li>
+                    • Organized hackathons, speaker sessions, and community
+                    events
+                  </li>
                 </ul>
               </div>
             </div>

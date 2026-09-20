@@ -7,19 +7,28 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mvgwanoz'
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  })
   const [ok, setOk] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setOk(null); setErr(null)
+    setOk(null)
+    setErr(null)
 
     try {
       const res = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           name: form.name,
           email: form.email,
@@ -48,7 +57,7 @@ export default function Contact() {
         <div className="mt-8 grid lg:grid-cols-2 gap-8">
           <div className="card p-6">
             <div className="space-y-4">
-              <div className="flex items-center gap-3 text-muted">
+              <div className="flex items-center gap-3 text-muted break-all">
                 <Mail size={18} /> betis.mohamed.dhia@gmail.com
               </div>
               <div className="flex items-center gap-3 text-muted">
@@ -67,6 +76,7 @@ export default function Contact() {
               <input
                 className="px-3 py-2 rounded-lg border border-white/10 bg-white/70 dark:bg-white/5"
                 placeholder="Name *"
+                aria-label="Name"
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -75,6 +85,7 @@ export default function Contact() {
                 type="email"
                 className="px-3 py-2 rounded-lg border border-white/10 bg-white/70 dark:bg-white/5"
                 placeholder="Email *"
+                aria-label="Email"
                 required
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -83,6 +94,7 @@ export default function Contact() {
             <input
               className="mt-4 w-full px-3 py-2 rounded-lg border border-white/10 bg-white/70 dark:bg-white/5"
               placeholder="Subject *"
+              aria-label="Subject"
               required
               value={form.subject}
               onChange={(e) => setForm({ ...form, subject: e.target.value })}
@@ -90,6 +102,7 @@ export default function Contact() {
             <textarea
               className="mt-4 w-full px-3 py-2 rounded-lg border border-white/10 bg-white/70 dark:bg-white/5 min-h-[140px]"
               placeholder="Message *"
+              aria-label="Message"
               required
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}

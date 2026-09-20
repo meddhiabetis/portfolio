@@ -9,10 +9,10 @@ type NavItem = { href: `#${string}`; label: string }
 const navItems: NavItem[] = [
   { href: '#about', label: 'About' },
   { href: '#experience', label: 'Experience' },
-  { href: '#education', label: 'Education' },
-  { href: '#organizations', label: 'Leadership' }, // aka "Vie associative"
   { href: '#projects', label: 'Projects' },
   { href: '#skills', label: 'Skills' },
+  { href: '#education', label: 'Education' },
+  { href: '#organizations', label: 'Leadership' },
   { href: '#contact', label: 'Contact' },
 ]
 
@@ -74,11 +74,14 @@ export default function Navigation() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const onNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault()
-    setIsOpen(false)
-    scrollToId(href.replace('#', ''))
-  }
+  const onNavClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      e.preventDefault()
+      setIsOpen(false)
+      scrollToId(href.replace('#', ''))
+    },
+    [scrollToId]
+  )
 
   const desktopLinks = useMemo(
     () =>
@@ -100,7 +103,7 @@ export default function Navigation() {
           </a>
         )
       }),
-    [active]
+    [active, onNavClick]
   )
 
   const mobileLinks = useMemo(
@@ -115,7 +118,7 @@ export default function Navigation() {
           {item.label}
         </a>
       )),
-    []
+    [onNavClick]
   )
 
   return (
@@ -144,13 +147,13 @@ export default function Navigation() {
               window.scrollTo({ top: 0, behavior: 'smooth' })
               history.replaceState(null, '', '#')
             }}
-            className="text-xl font-bold gradient-text"
+            className="text-base sm:text-xl font-bold gradient-text"
             aria-label="Back to top"
           >
-            Mohamed Dhia Betis — Portfolio
+            Mohamed Dhia Betis
           </a>
 
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden xl:flex items-center gap-4">
             {desktopLinks}
             <div className="h-5 w-px bg-white/20" />
             <ThemeToggle />
@@ -186,7 +189,7 @@ export default function Navigation() {
 
           <button
             onClick={() => setIsOpen((p) => !p)}
-            className="md:hidden text-muted hover:text-indigo-600"
+            className="xl:hidden text-muted hover:text-indigo-600"
             aria-label="Toggle menu"
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
@@ -196,7 +199,7 @@ export default function Navigation() {
         </div>
 
         {isOpen && (
-          <div id="mobile-menu" className="md:hidden pb-4">
+          <div id="mobile-menu" className="xl:hidden pb-4">
             <div className="card p-4 space-y-3">
               {mobileLinks}
               <div className="flex items-center justify-between pt-2">
@@ -218,7 +221,10 @@ export default function Navigation() {
                   >
                     <Linkedin size={18} />
                   </a>
-                  <a href="mailto:betis.mohamed.dhia@gmail.com" aria-label="Email">
+                  <a
+                    href="mailto:betis.mohamed.dhia@gmail.com"
+                    aria-label="Email"
+                  >
                     <Mail size={18} />
                   </a>
                 </div>

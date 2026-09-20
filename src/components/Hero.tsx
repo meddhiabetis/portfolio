@@ -5,9 +5,9 @@ import Image from 'next/image'
 import { Download, MessageCircle } from 'lucide-react'
 
 const stats = [
-  { big: 'Final‑Year Student', small: 'Statistics & Data Science (Engineering degree.)' },
+  { big: 'Data Engineer', small: 'MINOTORE · Sep 2026–Present' },
   { big: 'AI • LLMs • ML', small: 'Core focus' },
-  { big: 'Community Trainer', small: 'ML/NLP/CV sessions' },
+  { big: 'ESSAI Graduate', small: 'Engineering degree · 2026' },
 ]
 
 const Hero = () => {
@@ -21,17 +21,23 @@ const Hero = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-sm uppercase tracking-wide text-muted">AI / Data Science</p>
+            <p className="text-sm uppercase tracking-wide text-muted">
+              Data Engineer | AI &amp; LLM Engineering
+            </p>
             <h1 className="mt-2 text-4xl md:text-5xl font-extrabold">
-              Hi, I&apos;m <span className="gradient-text">Mohamed Dhia Betis</span>
+              <span className="gradient-text">Mohamed Dhia Betis</span>
             </h1>
             <p className="mt-4 text-lg text-muted">
-              Final-year engineering student at ESSAI, focused on NLP, CV, and LLM systems.
-              Experience in Generative AI, RAG, agentic AI, and scalable backends.
+              Data Engineer at MINOTORE, with a strong background in AI and
+              LLM-based systems.
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
-              <a href="/docs/MohamedDhia_Betis_CV.pdf" className="btn btn-primary px-5 py-3" download>
+              <a
+                href="/docs/MohamedDhia_Betis_CV.pdf"
+                className="btn btn-primary px-5 py-3"
+                download
+              >
                 <Download size={18} aria-hidden="true" />
                 Download Resume
               </a>
@@ -41,10 +47,12 @@ const Hero = () => {
               </a>
             </div>
 
-            <div className="mt-8 grid grid-cols-3 gap-4">
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
               {stats.map((m) => (
                 <div key={m.big} className="card p-4">
-                  <div className="text-lg md:text-xl font-bold leading-snug">{m.big}</div>
+                  <div className="text-lg md:text-xl font-bold leading-snug">
+                    {m.big}
+                  </div>
                   <div className="text-xs text-muted">{m.small}</div>
                 </div>
               ))}
@@ -67,7 +75,7 @@ const Hero = () => {
                 width={320}
                 height={320}
                 sizes="(min-width: 768px) 20rem, 16rem"
-                className="relative rounded-2xl ring-4 ring-indigo-600/20 object-cover shadow-[0_20px_35px_rgba(0,0,0,0.25)]"
+                className="relative w-64 md:w-80 max-w-full h-auto rounded-2xl ring-4 ring-indigo-600/20 object-cover shadow-[0_20px_35px_rgba(0,0,0,0.25)]"
                 priority
               />
             </div>
